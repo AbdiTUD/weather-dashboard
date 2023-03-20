@@ -1,0 +1,155 @@
+[debug] > Exec(;reload; set _root_.org.jetbrains.sbt.StructureKeys.sbtStructureOptions in Global := "download resolveClassifiers" ;preferScala2;*/*:dumpStructureTo C:/Users/abdir/AppData/Local/Temp/sbt-structure.xml; session clear-all ; set ideaPort in Global := 1092, None, None)
+[debug] > Exec(reload, None, None)
+[debug] > Exec(sbtStashOnFailure, None, None)
+[debug] > Exec(onFailure loadFailed, None, None)
+[debug] > Exec(loadp, None, None)
+[info] welcome to sbt 1.8.2 (Eclipse Adoptium Java 17.0.6)
+[debug]       Load.loadUnit: plugins took 36.9705ms
+[debug]       Load.loadUnit: defsScala took 0.0042ms
+[debug] [Loading] Scanning directory C:\Users\abdir\.sbt\1.0\plugins
+[debug] [Loading] Found non-root projects 
+[debug] [Loading] Done in C:\Users\abdir\.sbt\1.0\plugins, returning: ()
+[debug] deducing auto plugins based on known facts Set(Atom(sbt.plugins.CorePlugin)) and clauses Clauses(Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.IvyPlugin)))
+[debug] Clause(Atom(sbt.ScriptedPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.SbtPlugin),Set(Atom(sbt.ScriptedPlugin)))
+[debug] Clause(Atom(sbt.plugins.SemanticdbPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.JUnitXmlReportPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.MiniDependencyTreePlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.IvyPlugin)))
+[debug] Clause(Atom(sbt.plugins.IvyPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.SemanticdbPlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.JUnitXmlReportPlugin)))
+[debug] Clause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.Giter8TemplatePlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.MiniDependencyTreePlugin))))
+[debug]   :: deduced result: Matched(sbt.plugins.CorePlugin,sbt.plugins.Giter8TemplatePlugin,sbt.plugins.IvyPlugin,sbt.plugins.JvmPlugin,sbt.plugins.MiniDependencyTreePlugin,sbt.plugins.JUnitXmlReportPlugin,sbt.plugins.SemanticdbPlugin)
+[debug] Plugins.deducer#function took 1.8085 ms
+[debug]           Load.resolveProject(global-plugins) took 4.1703ms
+[debug]         Load.loadTransitive: finalizeProject(Project(id global-plugins, base: C:\Users\abdir\.sbt\1.0\plugins, plugins: List(<none>))) took 6.3788ms
+[debug] [Loading] Done in C:\Users\abdir\.sbt\1.0\plugins, returning: (global-plugins)
+[debug]       Load.loadUnit: loadedProjectsRaw took 7.3426ms
+[debug]       Load.loadUnit: cleanEvalClasses took 0.0136ms
+[debug]     Load.loadUnit(file:/C:/Users/abdir/.sbt/1.0/plugins/, ...) took 45.1834ms
+[debug]   Load.apply: load took 46.6627ms
+[debug]   Load.apply: resolveProjects took 0.5655ms
+[debug]   Load.apply: finalTransforms took 16.0274ms
+[debug]   Load.apply: config.delegates took 0.247ms
+[debug]   Load.apply: Def.make(settings)... took 56.3187ms
+[debug]   Load.apply: structureIndex took 12.6515ms
+[debug]   Load.apply: mkStreams took 0.0028ms
+[info] loading global plugins from C:\Users\abdir\.sbt\1.0\plugins
+[debug] Running task... Cancel: Signal, check cycles: false, forcegc: true
+[debug] Load.defaultLoad until apply took 461.8221ms
+[debug]           Load.loadUnit: plugins took 23.7702ms
+[debug]           Load.loadUnit: defsScala took 0.0032ms
+[debug] [Loading] Scanning directory C:\Users\abdir\Documents\OS2-PROJECT\weather dashboard\project
+[debug]             Load.loadUnit: mkEval took 0.2343ms
+[debug] [Loading] Found non-root projects 
+[debug] [Loading] Done in C:\Users\abdir\Documents\OS2-PROJECT\weather dashboard\project, returning: ()
+[debug] deducing auto plugins based on known facts Set(Atom(sbt.plugins.CorePlugin)) and clauses Clauses(Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.IvyPlugin)))
+[debug] Clause(Atom(sbt.ScriptedPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.SbtPlugin),Set(Atom(sbt.ScriptedPlugin)))
+[debug] Clause(Atom(sbt.plugins.SemanticdbPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.JUnitXmlReportPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.MiniDependencyTreePlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.IvyPlugin)))
+[debug] Clause(Atom(sbt.plugins.IvyPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.SemanticdbPlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.JUnitXmlReportPlugin)))
+[debug] Clause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.Giter8TemplatePlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.MiniDependencyTreePlugin))))
+[debug]   :: deduced result: Matched(sbt.plugins.CorePlugin,sbt.plugins.Giter8TemplatePlugin,sbt.plugins.IvyPlugin,sbt.plugins.JvmPlugin,sbt.plugins.MiniDependencyTreePlugin,sbt.plugins.JUnitXmlReportPlugin,sbt.plugins.SemanticdbPlugin)
+[debug] Plugins.deducer#function took 1.3796 ms
+[info] loading settings for project weather-dashboard-build from idea.sbt ...
+[debug]               Load.resolveProject(weather-dashboard-build) took 8.6868ms
+[debug]             Load.loadTransitive: finalizeProject(Project(id weather-dashboard-build, base: C:\Users\abdir\Documents\OS2-PROJECT\weather dashboard\project, plugins: List(<none>))) took 10.4231ms
+[debug] [Loading] Done in C:\Users\abdir\Documents\OS2-PROJECT\weather dashboard\project, returning: (weather-dashboard-build)
+[debug]           Load.loadUnit: loadedProjectsRaw took 25.5191ms
+[debug]           Load.loadUnit: cleanEvalClasses took 3.0999ms
+[debug]         Load.loadUnit(file:/C:/Users/abdir/Documents/OS2-PROJECT/weather%20dashboard/project/, ...) took 53.0227ms
+[debug]       Load.apply: load took 53.8667ms
+[debug]       Load.apply: resolveProjects took 0.1077ms
+[debug]       Load.apply: finalTransforms took 4.9362ms
+[debug]       Load.apply: config.delegates took 0.2209ms
+[debug]       Load.apply: Def.make(settings)... took 42.5365ms
+[debug]       Load.apply: structureIndex took 22.9906ms
+[debug]       Load.apply: mkStreams took 0.0029ms
+[info] loading project definition from C:\Users\abdir\Documents\OS2-PROJECT\weather dashboard\project
+[debug] Running task... Cancel: Signal, check cycles: false, forcegc: true
+[debug]     Load.loadUnit: plugins took 310.0218ms
+[debug]     Load.loadUnit: defsScala took 0.0029ms
+[debug] [Loading] Scanning directory C:\Users\abdir\Documents\OS2-PROJECT\weather dashboard
+[debug]       Load.loadUnit: mkEval took 0.2547ms
+[debug] [Loading] Found root project root w/ remaining 
+[debug] deducing auto plugins based on known facts Set(Atom(sbt.plugins.CorePlugin)) and clauses Clauses(Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.IvyPlugin)))
+[debug] Clause(Atom(sbt.ScriptedPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.SbtPlugin),Set(Atom(sbt.ScriptedPlugin)))
+[debug] Clause(Atom(sbt.plugins.SemanticdbPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.JUnitXmlReportPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.MiniDependencyTreePlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(org.jetbrains.sbt.StructurePlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(org.jetbrains.sbt.IdeaShellPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(org.jetbrains.sbt.indices.SbtIntellijIndicesPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.IvyPlugin)))
+[debug] Clause(Atom(sbt.plugins.IvyPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.SemanticdbPlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.JUnitXmlReportPlugin)))
+[debug] Clause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.Giter8TemplatePlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.MiniDependencyTreePlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(org.jetbrains.sbt.StructurePlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(org.jetbrains.sbt.IdeaShellPlugin)))
+[debug] Clause(And(Set(Atom(sbt.plugins.CorePlugin), Atom(sbt.plugins.JvmPlugin))),Set(Atom(org.jetbrains.sbt.indices.SbtIntellijIndicesPlugin))))
+[debug]   :: deduced result: Matched(sbt.plugins.CorePlugin,sbt.plugins.Giter8TemplatePlugin,sbt.plugins.IvyPlugin,sbt.plugins.JvmPlugin,sbt.plugins.SemanticdbPlugin,org.jetbrains.sbt.indices.SbtIntellijIndicesPlugin,sbt.plugins.JUnitXmlReportPlugin,org.jetbrains.sbt.IdeaShellPlugin,org.jetbrains.sbt.StructurePlugin,sbt.plugins.MiniDependencyTreePlugin)
+[debug] Plugins.deducer#function took 1.6207 ms
+[info] loading settings for project root from build.sbt ...
+[debug]         Load.resolveProject(root) took 29.9138ms
+[debug]       Load.loadTransitive: finalizeProject(Project(id root, base: C:\Users\abdir\Documents\OS2-PROJECT\weather dashboard, plugins: List(<none>))) took 32.0247ms
+[debug] [Loading] Done in C:\Users\abdir\Documents\OS2-PROJECT\weather dashboard, returning: (root)
+[debug]     Load.loadUnit: loadedProjectsRaw took 1551.3096ms
+[debug]     Load.loadUnit: cleanEvalClasses took 37.5114ms
+[debug]   Load.loadUnit(file:/C:/Users/abdir/Documents/OS2-PROJECT/weather%20dashboard/, ...) took 1899.4911ms
+[debug] Load.apply: load took 1900.6499ms
+[debug] Load.apply: resolveProjects took 0.0927ms
+[debug] Load.apply: finalTransforms took 13.855ms
+[debug] Load.apply: config.delegates took 0.2354ms
+[debug] Load.apply: Def.make(settings)... took 53.7302ms
+[debug] Load.apply: structureIndex took 15.8222ms
+[debug] Load.apply: mkStreams took 0.0032ms
+[warn] Discarding 1 session setting.  Use 'session save' to persist session settings.
+[info] set current project to weather dashboard (in build file:/C:/Users/abdir/Documents/OS2-PROJECT/weather%20dashboard/)
+[debug] > Exec(sbtPopOnFailure, None, None)
+[debug] > Exec(resumeFromFailure, None, None)
+[debug] > Exec(set _root_.org.jetbrains.sbt.StructureKeys.sbtStructureOptions in Global := "download resolveClassifiers", None, None)
+[info] Defining Global / sbtStructureOptions
+[info] The new value will be used by Global / ssOptions
+[debug] Defining 
+[debug] 	Global / sbtStructureOptions
+[debug] 
+[debug] The new value will be used by 
+[debug] 	Global / ssOptions
+[info] Reapplying settings...
+[info] set current project to weather dashboard (in build file:/C:/Users/abdir/Documents/OS2-PROJECT/weather%20dashboard/)
+[debug] > Exec(preferScala2, None, None)
+[debug] > Exec(*/*:dumpStructureTo C:/Users/abdir/AppData/Local/Temp/sbt-structure.xml, None, None)
+[debug] Evaluating tasks: Global / dumpStructureTo
+[warn] sbt 0.13 shell syntax is deprecated; use slash syntax instead: Global / dumpStructureTo
+[debug] Running task... Cancel: Signal, check cycles: false, forcegc: true
+[info] Writing structure to C:\Users\abdir\AppData\Local\Temp\sbt-structure.xml...
+[info] Done.
+[success] Total time: 16 s, completed 9 Mar 2023, 20:12:33
+[debug] > Exec(session clear-all, None, None)
+[info] Reapplying settings...
+[info] set current project to weather dashboard (in build file:/C:/Users/abdir/Documents/OS2-PROJECT/weather%20dashboard/)
+[debug] > Exec(set ideaPort in Global := 1092, None, None)
+[info] Defining Global / ideaPort
+[info] The new value will be used by Compile / compile, Test / compile
+[debug] Defining 
+[debug] 	Global / ideaPort
+[debug] 
+[debug] The new value will be used by 
+[debug] 	Compile / compile
+[debug] 	Test / compile
+[info] Reapplying settings...
+[info] set current project to weather dashboard (in build file:/C:/Users/abdir/Documents/OS2-PROJECT/weather%20dashboard/)
+[debug] > Exec(idea-shell, None, None)
+[debug] > Exec(, None, None)
+[debug] > Exec(idea-shell, None, None)
