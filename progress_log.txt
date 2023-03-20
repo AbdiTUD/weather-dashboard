@@ -1,0 +1,10 @@
+20.3
+
+Tässä vaiheessa olen saanut tehtyä käyttöliittymästä ensimmäisen luokan sekä yläluokan.
+Minulla on ollut hankaluuksia ymmärtää miten luon yksittäisiä scalafx chart luokkia,
+ja piirtää ne lopuksi käyttämällä ulkopuolista luokkaa joka sitten piirtäisi lopullisen käyttöliittymän.
+
+Sillä osaan luoda erilaisia chartteja käyttämällä scalafx:ää.
+
+Datan käsittelystä ei ole ollut ongelmaa, olen ehtinyt katsoa sitä vähän. Mutta koitan saada tämän viikonloppuun
+mennessä sen tehtyä.
