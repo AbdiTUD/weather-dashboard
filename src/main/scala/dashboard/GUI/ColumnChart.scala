@@ -3,32 +3,33 @@ package dashboard.GUI
 import scalafx.scene.chart.{BarChart, CategoryAxis, NumberAxis, XYChart}
 import scalafx.scene.Node
 import javafx.scene.chart
-
+import scalafx.scene.chart.Axis
 import scalafx.scene.layout.*
 import scalafx.collections.ObservableBuffer
 
-class ColumnChart(dataSet: Seq[Number], var dataSetx:ObservableBuffer[String], val xTitle: String, val yTitle: String)extends Components(dataSet){
+class ColumnChart(val dataSet: Seq[Seq[Double]], var dataSetx: ObservableBuffer[String], val yTitle: String)extends Components{
 
-  val allDate = dataSetx.zip(dataSet)
-  val xAxis = dataSetx
-  val yAxis = NumberAxis("", 0.0d, 10.0d, 20.0d)
-  ObservableBuffer.from( (dataSetx zip dataSet).map)
-  /*val xAxis = new CategoryAxis{
-    label = xTitle
-    categories = ObservableBuffer.from(dataSetx)
+  val xAxis: Axis[String] = CategoryAxis(dataSetx)
+  val yAxis: Axis[Number] = NumberAxis("Rain", 0.0, 5.0, 10.0)
 
+  val newData = ObservableBuffer[chart.XYChart.Series[String, Number]]()
+  def parser(datay: Seq[Double]): ObservableBuffer[chart.XYChart.Data[String, Number]] =
+    ObservableBuffer.from( (dataSetx zip datay).map(xy => XYChart.Data(xy._1, xy._2) ) )
+  val series = dataSet.map(d => XYChart.Series("", parser(d)) )
+  val nChart: BarChart[String, Number] = new BarChart[String, Number](xAxis, yAxis) {
+    data() = ObservableBuffer(series: _*)
+    categoryGap = 10.0d
   }
-  val yAxis = new NumberAxis{
-    label = yTitle
-    tickLabelFormatter = NumberAxis.DefaultFormatter(this, "mm", "")
+  private var visible = true
+  def toggleVisibility() : Unit = {
+    visible = !visible
+    component.visible = visible
   }
-  for i <- dataSet.indices do
-    val series =
-      new XYChart.Series[String, Number]{
-        name = ""
-          data = XYChart.Data[String, Number](dataSetx(i), dataSet(i))
-      }
+  override def component: Pane = new VBox{
+    spacing = 10
+    children = Seq(nChart)
+  }
 
-*/
+
+
 }
-

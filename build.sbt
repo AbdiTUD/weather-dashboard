@@ -7,6 +7,7 @@ lazy val root = (project in file("."))
     name := "weather dashboard"
   )
 libraryDependencies += "org.scalafx" % "scalafx_3" % "19.0.0-R30"
+
 val circeVersion = "0.14.1"
 libraryDependencies ++= Seq(
   "io.circe" %% "circe-core",

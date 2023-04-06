@@ -1,12 +1,7 @@
 package dashboard.GUI
-import scalafx.scene.chart.NumberAxis
-import scalafx.scene.Node
-import scalafx.scene.Scene
+import scalafx.scene.layout.Pane
 
-abstract class Components(val dataSet: Seq[Number]) {
-  
-  def start(): Unit
-  val setTitle: Unit
-  val xAxis: NumberAxis
-  val yAxis: NumberAxis
+trait Components {
+  def component: Pane
 }
+

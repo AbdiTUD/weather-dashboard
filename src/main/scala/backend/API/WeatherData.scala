@@ -1,5 +1,5 @@
 package backend.API
 
-object Weather {
+object WeatherData {
 
 }
