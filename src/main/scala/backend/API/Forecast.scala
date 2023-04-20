@@ -5,16 +5,22 @@ import API.*
 
 
 object Forecast :
+
   case class Wind(speed: Double, deg: Int, gust: Double = 0.0)
-  case class snow(`1h`: Double = 0.0)
-  case class rain(`1h`: Double = 0.0)
-  case class sys(`type`: Int, id:Int,country: String,sunrise: Int, sunset:Int )
-  case class main(temo: Double, feels_like:Double,temp_min:Double,temp_max:Double,
+  case class snow(`3h`: Double = 0.0)
+  case class rain(`3h`: Double = 0.0)
+  case class sys(pod: String)
+  case class main(temp: Double, feels_like:Double,temp_min:Double,temp_max:Double,
     pressure:Int,sea_level: Int,grnd_level: Int, humidity: Int,temp_kf:Double)
   case class RespWind(speed: Double, deg: Int, gust: Option[Double])
-  case class city(id:Int, name: String,coord:coord,country:String,population:Int,timezone:Int,
+  case class city(id:Int, name: String, coord:coord, country:String, population:Int, timezone:Int,
                   sunrise:Int,sunset:Int)
-  case class listReponse(cod: Int, message: Int, cnt:Int, list:Array[forecastResponse],city:city)
+  case class listReponse(cod: Int, 
+                         message: Int, 
+                         cnt:Int, 
+                         list:Array[forecastResponse],
+                         city:city
+                        )
 
   case class forecastResponse(
                    dt: Long,
@@ -41,7 +47,7 @@ object Forecast :
     val weather = resp.weather
     val clouds  = resp.clouds
     val wind    = resp.wind.gust match
-      case Some(w) => Wind(resp.wind.speed, resp.wind.deg, w)
+      case Some(g) => Wind(resp.wind.speed, resp.wind.deg, g)
       case None => Wind(resp.wind.speed, resp.wind.deg)
     val visibility = resp.visibility
     val sys     = resp.sys
@@ -53,5 +59,12 @@ object Forecast :
       case Some(s) => s
       case None => snow()
 
+  def getForeData(place: String) =
+    val APIcall = s"https://api.openweathermap.org/data/2.5/forecast?q=$place&appid=${apiKey}&units=metric"
+    val fetchData = API.fetchData(APIcall)
+    API.decodeFore(fetchData)
 
-
+  def getForecastData(coord: coord) =
+    val APIcall = s"https://api.openweathermap.org/data/2.5/forecast?lat=${coord.lat}&lon=${coord.lon}&appid=${apiKey}&units=metric"
+    val fetchData = API.fetchData(APIcall)
+    API.decodeFore(fetchData)

@@ -33,7 +33,9 @@ class ScatterPlot(val dataSet: Seq[(Double,Double)]) extends Components{
     }
     }
   }
-
+  def removeScatter(): Unit =
+    component.children.remove(component)
+    
   def duplicate(scatterPlot: ScatterPlot): ScatterPlot = {
     val newData = scatterPlot.dataSet.map(p => (p._1, p._2))
     val newSeries = new XYChart.Series[Number, Number] {

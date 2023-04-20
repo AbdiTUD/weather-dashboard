@@ -30,11 +30,13 @@ object API {
     val givDada = Using(Source.fromURL(url)){
       JSN => JSN.getLines().mkString
     }
+    
     givDada match
       case Success(file) => file
       case Failure(e) =>
         Console.err.println("Connection failed")
         throw e
+
   def decodeAP(data: String) =
     val deez = decode[APResp](data).toTry
     deez match
@@ -49,9 +51,10 @@ object API {
     boom match
       case Success(deez) => WeatherData.DataResponse(deez)
       case Failure(e) =>
-        Console.err.println("Bad data or connection failed :D")
+        Console.err.println("Bad data or connection failed :D weatherdata")
         e.printStackTrace()
         throw e
+        
   def decodeFore(data:String) =
     val shakalaka = decode[ForeResp](data).toTry
     shakalaka match
@@ -60,7 +63,5 @@ object API {
         Console.err.println("Bad data or connection failed :D")
         e.printStackTrace()
         throw e
-
-
 
 }

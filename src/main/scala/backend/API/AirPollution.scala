@@ -6,18 +6,33 @@ import backend.API.API.*
 
 object AirPollution {
 
-  case class APIResponse(coord: coord, rest: Array[APdata])
-  case class APdata(dt: Int, main: Main, components: Components)
-  case class Main(aqi: Int)
-  case class Components(co: Double, no: Double, no2: Double,
-                        o3: Double, s02: Double, pm2_5: Double,
-                        pm10: Double, nh3: Double)
+  case class APIResponse(coord: coord,
+                         list: Array[APdata]
+                        )
 
-  def getAirPollutionData(coord: coord): APIResponse =
+  case class APdata(main: Main,
+                    components: Components,
+                    dt: Int
+                     )
+
+  case class Main(aqi: Int)
+  case class Components(
+                        co: Double,
+                        no: Double,
+                        no2: Double,
+                        o3: Double,
+                        s02: Double,
+                        pm2_5: Double,
+                        pm10: Double,
+                        nh3: Double
+                        )
+
+  def getAirPollutionData(coord: coord) =
     println(s"http://api.openweathermap.org/data/2.5/air_pollution?lat=${coord.lat}&lon=${coord.lon}&appid=${apiKey}")
     val data = API.fetchData(s"http://api.openweathermap.org/data/2.5/air_pollution?lat=${coord.lat}&lon=${coord.lon}&appid=${apiKey}")
     API.decodeAP(data)
-  def getAPData(name: String): APIResponse =
+
+  def getAPData(name: String) =
     val giv = WeatherData.getWDData(name)
     getAirPollutionData(giv.coord)
 
