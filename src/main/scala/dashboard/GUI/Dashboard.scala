@@ -1,10 +1,7 @@
 package dashboard.GUI
 
-import backend.API.WeatherData
+import backend.API.{AirPollution, DateFormat, Forecast, WeatherData}
 import backend.API.DateFormat.*
-import backend.API.Forecast
-import backend.API.AirPollution
-
 import javafx.scene.control.Alert
 import javafx.scene.layout.{AnchorPane, Priority}
 import scalafx.scene.layout.{BorderPane, GridPane, HBox, VBox}
@@ -40,7 +37,7 @@ class DataModeler(place: String):
   val forelist = getForecast.list
 
   var datarain = Seq[Seq[Double]]()
-  var obsrain = ObservableBuffer[String]("Rain", "Temp")
+  var obsrain = ObservableBuffer[String]("Rain (mm)", "Temp (°C)")
   val foreCasts =
     for i <- 0 to getForecast.list.size/2 do
       val thisFore = forelist(i)
@@ -55,8 +52,7 @@ class DataModeler(place: String):
   var AirPollutionNames = Seq("co","no","no2","o3","so2","pm2_5","pm10","nh3")
   val currentAP = getAirPol.list.head.components
   var airPollutiondata = Seq[Int](currentAP.co.toInt, currentAP.no.toInt, currentAP.no2.toInt, currentAP.o3.toInt,
-                         currentAP.s02.toInt, currentAP.pm2_5.toInt, currentAP.pm10.toInt, currentAP.nh3.toInt)
-
+                         currentAP.so2.toInt, currentAP.pm2_5.toInt, currentAP.pm10.toInt, currentAP.nh3.toInt)
 
 
 var currentCity = ""
@@ -65,6 +61,7 @@ object DashboardUI extends JFXApp3 {
   var data1 = Seq((1.2, 1.3), (3.1, 4.5), (5.3, 11.5))
   var data2 = Seq(10, 20, 30)
   var data3 = Seq(Seq(1.0, 2.0, 3.3), Seq(2.2, 3.0, 4.1), Seq(3.3, 4.1, 5.3))
+  var cardData = Seq(Seq(1.0, 2.0, 3.3), Seq(2.2, 3.0, 4.1), Seq(3.3, 4.1, 5.3))
   var data3x = ObservableBuffer("Rain levels/temp")
 
 
@@ -72,6 +69,7 @@ object DashboardUI extends JFXApp3 {
     var scatterPlot = new ScatterPlot(data1)
     var pie = new Pie(data2, Seq("A", "B", "C"))
     var columnChart = new ColumnChart(data3, data3x, "Y")
+    var newCard = new Card(cardData,12.0)
 
     var scatterPlotBox = new VBox {
       id = "scatterPlotBox"
@@ -272,8 +270,16 @@ object DashboardUI extends JFXApp3 {
       columnChartBox.children.remove(columnChartBox.children.head)
     }
 
+    var cardBox = new VBox{
+      id = "cardBox"
+      spacing = 3
+      managed = true
+      vgrow = Priority.SOMETIMES
+      children = newCard.component
+    }
+
     //draggable groups from youtube
-    val draggableNodes: Buffer[Node] = Buffer(scatterPlotBox, pieBox, columnChartBox, duplicatedScatter, duplicatedPie, duplicatedColumnChart)
+    val draggableNodes: Buffer[Node] = Buffer(scatterPlotBox, pieBox, columnChartBox, duplicatedScatter, duplicatedPie, duplicatedColumnChart,cardBox)
     var mouseStartX: Double = 0
     var mouseStartY: Double = 0
     draggableNodes.foreach { node =>
@@ -317,11 +323,33 @@ object DashboardUI extends JFXApp3 {
       }
     }
 
+    val cardToggle = new CheckMenuItem {
+      text = "Card"
+      selected = true
+      onAction = () => {
+        cardBox.visible = !cardBox.visible.value
+      }
+    }
+
     val buttonBox = new MenuButton("Hide/Show Charts"){
       alignment = Pos.TopLeft
-      items = Seq(columnChartToggle, pieToggle, scatterPlotToggle)
-
+      items = Seq(columnChartToggle, pieToggle, scatterPlotToggle,cardToggle)
     }
+
+
+    val dashboard = new GridPane {
+      style = "-fx-background-color: #f0e68c;"
+      hgap = 5
+      vgap = 5
+      padding = Insets(20)
+      add(buttonBox, 0, 0)
+      add(duplicatedColumnChart, 0, 2)
+      add(duplicatedPie, 5, 2)
+      add(duplicatedScatter, 7, 2)
+    }
+
+    var information = new Label("Type in a city name to get weather info...")
+
     val searchLocation = new TextField{
       promptText = "Search City"
       onAction = () => {
@@ -339,31 +367,22 @@ object DashboardUI extends JFXApp3 {
 
         data1 = currentWeather.dataTemps
         scatterPlot = new ScatterPlot(data1)
+        scatterPlot.series.name = "Temp °C"
         scatterPlotBox.children.remove(scatterPlotBox.children.last)
         scatterPlotBox.children.add(scatterPlot.component)
+
+        cardData = currentWeather.datarain
+        newCard = new Card(cardData, currentWeather.temp)
+        cardBox.children.remove(cardBox.children.last)
+        cardBox.children.add(newCard.component)
 
         pie = new Pie(currentWeather.airPollutiondata,currentWeather.AirPollutionNames)
         pieBox.children.remove(pieBox.children.last)
         pieBox.children.add(pie.component)
-
+        information.setText(s"Location: $currentCity \nDate: ${DateFormat.getDay(currentWeather.getWDfrom.dt)}")
       }
     }
 
-    val dashboard = new GridPane {
-      style = "-fx-background-color: #f0e68c;"
-      hgap = 5
-      vgap = 5
-      padding = Insets(20)
-      add(buttonBox, 0, 0)
-      add(new Label("Pick a chart from 'Add Charts' from the left sidepanel") {
-        managed = false
-        font = Font.font(20)
-        textFill = Color.Black
-      }, 0, 1, 8, 1)
-      add(duplicatedColumnChart, 0, 2)
-      add(duplicatedPie, 5, 2)
-      add(duplicatedScatter, 7, 2)
-    }
 
     val chartMenu = new MenuButton("Add charts"){
       alignment = Pos.BottomLeft
@@ -379,7 +398,10 @@ object DashboardUI extends JFXApp3 {
         new MenuItem{
           text = "Add Scatter Chart"
           onAction = () => dashboard.add(scatterPlotBox,7,1)
-        }
+        },
+        new MenuItem{
+          text = "Add Card"
+          onAction = () => dashboard.add(cardBox,11,1)}
       )
     }
     val sideBar = new VBox{
@@ -388,8 +410,9 @@ object DashboardUI extends JFXApp3 {
       children = Seq(new Button{
         text = "Weather Dashboard"
         onAction = () => dashboard.toFront()
-      },searchLocation,chartMenu)
+      },searchLocation,chartMenu, information)
     }
+
     stage = new JFXApp3.PrimaryStage {
       title = "Dashboard"
       width = 1800

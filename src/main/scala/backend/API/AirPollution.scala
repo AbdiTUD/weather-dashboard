@@ -12,7 +12,7 @@ object AirPollution {
 
   case class APdata(main: Main,
                     components: Components,
-                    dt: Int
+                    dt: Long
                      )
 
   case class Main(aqi: Int)
@@ -21,7 +21,7 @@ object AirPollution {
                         no: Double,
                         no2: Double,
                         o3: Double,
-                        s02: Double,
+                        so2: Double,
                         pm2_5: Double,
                         pm10: Double,
                         nh3: Double

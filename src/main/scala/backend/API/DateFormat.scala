@@ -15,7 +15,7 @@ object DateFormat {
 
   case class clouds(all: Int)
   case class weather(id: Int, main: String, description: String, icon: String)
-  case class coord(lon: Double, lat: Double)
+  case class coord(lat: Double, lon: Double)
 
 
   def getHour(dt: Long) =
