@@ -5,6 +5,7 @@ import backend.API.DateFormat.*
 import javafx.beans.value.{ChangeListener, ObservableValue}
 import javafx.scene.control.Alert
 import javafx.scene.layout.{AnchorPane, Priority}
+import javafx.stage.FileChooser
 import scalafx.scene.layout.{BorderPane, GridPane, HBox, VBox}
 import scalafx.scene.Scene
 import scalafx.application.JFXApp3
@@ -20,6 +21,18 @@ import scalafx.scene.Node
 import scala.collection.mutable.Buffer
 import scalafx.scene.Group
 import scalafx.scene.input.{ContextMenuEvent, MouseButton, MouseEvent}
+
+import scala.io.Source
+import java.io.*
+import scala.util.{Failure, Success, Using}
+import io.circe.*
+import io.circe.generic.auto.*
+import io.circe.parser.*
+import io.circe.syntax.*
+import scalafx.scene.control.Alert.AlertType
+
+
+
 
 class DataModeler(place: String):
   var getWDfrom: WeatherData.DataResponse = WeatherData.getWDData(place)
@@ -62,14 +75,17 @@ object DashboardUI extends JFXApp3 {
   var data2 = Seq(10, 20, 30)
   var data3 = Seq(Seq(1.0, 2.0, 3.3), Seq(2.2, 3.0, 4.1), Seq(3.3, 4.1, 5.3))
   var cardData = Seq(Seq(1.0, 2.0, 3.3), Seq(2.2, 3.0, 4.1), Seq(3.3, 4.1, 5.3))
+  var cardTemp = 12.0
   var data3x = ObservableBuffer("Rain levels/temp")
+  var data5 = Seq[Int]()
+  var data6 = Seq[String]()
 
 
   override def start(): Unit = {
     var scatterPlot = new ScatterPlot(data1)
     var pie = new Pie(data2, Seq("A", "B", "C"))
     var columnChart = new ColumnChart(data3, data3x, "Y")
-    var newCard = new Card(cardData,12.0)
+    var newCard = new Card(cardData,cardTemp)
 
     var scatterPlotBox = new VBox {
       id = "scatterPlotBox"
@@ -448,7 +464,7 @@ object DashboardUI extends JFXApp3 {
         if x == 0 then
           columnChartBox.children.remove(columnChartBox.children(1))
           columnChartBox.children.add(columnChart.component)
-          x-=1
+          x=1
         else
           columnChartBox.children.remove(columnChartBox.children.last)
           columnChartBox.children.add(columnChart.component)
@@ -461,21 +477,23 @@ object DashboardUI extends JFXApp3 {
         if y == 0 then
           scatterPlotBox.children.remove(scatterPlotBox.children(1))
           scatterPlotBox.children.add(scatterPlot.component)
-          y-=1
+          y=1
         else
           scatterPlotBox.children.remove(scatterPlotBox.children.last)
           scatterPlotBox.children.add(scatterPlot.component)
 
         cardData = currentWeather.datarain
-        newCard = new Card(cardData, currentWeather.temp)
+        cardTemp = currentWeather.temp
+        newCard = new Card(cardData, cardTemp)
         cardBox.children.remove(cardBox.children.head)
         cardBox.children.add(newCard.component)
-
-        pie = new Pie(currentWeather.airPollutiondata,currentWeather.AirPollutionNames)
+        data5 = currentWeather.airPollutiondata
+        data6 = currentWeather.AirPollutionNames
+        pie = new Pie(data5,data6)
         if z == 0 then
           pieBox.children.remove(pieBox.children(1))
           pieBox.children.add(pie.component)
-          z-=1
+          z=1
         else
           pieBox.children.remove(pieBox.children.last)
           pieBox.children.add(pie.component)
@@ -490,28 +508,151 @@ object DashboardUI extends JFXApp3 {
       items = Seq(
         new MenuItem{
           text = "Add Column Chart"
-          onAction = () => dashboard.add(columnChartBox,0,1)
+          onAction = () =>
+            if !dashboard.children.contains(columnChartBox) then
+              dashboard.add(columnChartBox,0,1)
+            else new Alert(AlertType.Information, "Already added Column Chartt, \ncheck hide/show button if you've hid it.")
         },
         new MenuItem{
           text = "Add Pie Chart"
-          onAction = () => dashboard.add(pieBox,5,1)
+          if !dashboard.children.contains(pieBox) then
+            onAction = () => dashboard.add(pieBox,5,1)
+          else new Alert(AlertType.Information, "Already added Pie Chart, \ncheck hide/show button if you've hid it.")
+
         },
         new MenuItem{
           text = "Add Scatter Chart"
-          onAction = () => dashboard.add(scatterPlotBox,7,1)
+          onAction = () =>
+            if !dashboard.children.contains(scatterPlotBox) then
+              dashboard.add(scatterPlotBox,7,1)
+            else new Alert(AlertType.Information, "Already added Scatter Chart, \ncheck hide/show button if you've hid it.")
         },
         new MenuItem{
           text = "Add Card"
-          onAction = () => dashboard.add(cardBox,11,1)}
+          onAction = () =>
+            if !dashboard.children.contains(cardBox) then
+              dashboard.add(cardBox,11,1)
+            else new Alert(AlertType.Information, "Already added this chart, \ncheck hide/show button if you've hid it.")
+
+        }
       )
     }
+
+
+    case class ScatterPlotBox(x: Double, y: Double, visible: Boolean)
+    case class PieBox(x: Double, y: Double, visible: Boolean)
+    case class ColumnChartBox(x: Double, y: Double, visible: Boolean)
+    case class CardBox(x: Double, y: Double, visible: Boolean)
+    case class Data(data1: Seq[(Double, Double)], data3: Seq[Seq[Double]], data3x: ObservableBuffer[String], cardData: Seq[Seq[Double]], data5: Seq[Int],data6: Seq[String])
+    case class Dashboard(scatterPlotBox: ScatterPlotBox, pieBox: PieBox, columnChartBox: ColumnChartBox, data: Data, city:String, info: String,x:Int,y:Int,z:Int,cardtemp: Double,
+                         card: CardBox,scatterToggle: Boolean, columnToggle: Boolean, pieToggle: Boolean, cardToggle: Boolean)
+
+    //case class example from 15.4 in OS2, and the way I parsed through the data in the backend.API
+
+    val saveAsButton = new Button("Save") {
+      onAction = (_) => {
+        val dashboardData = Data(data1, data3, data3x, cardData, data5, data6)
+        val dashboard = Dashboard(ScatterPlotBox(scatterPlotBox.translateX(), scatterPlotBox.translateY(), scatterPlotBox.visible.value),
+          PieBox(pieBox.translateX(), pieBox.translateY(), pieBox.visible.value),
+          ColumnChartBox(columnChartBox.translateX(), columnChartBox.translateY(), columnChartBox.visible.value),
+          dashboardData,currentCity, information.getText,x,y,z,cardTemp, CardBox(cardBox.translateX(), cardBox.translateY(), cardBox.visible.value),
+          scatterPlotToggle.selected.value, columnChartToggle.selected.value, pieToggle.selected.value, cardToggle.selected.value)
+
+        val writeThis = dashboard.asJson.noSpaces
+        val writer = new PrintWriter(new File("dashboard.json"))
+        writer.write(writeThis)
+        writer.close()
+      }
+    }
+
+    val loadButton = new Button("Load") {
+      onAction = (_) => {
+        val source = Source.fromFile("dashboard.json")
+        val json = try source.mkString finally source.close()
+        val getData = decode[Dashboard](json) match
+          case Right(dashboard) => dashboard
+          case Left(e) =>
+            println("Cannot load this file :D")
+            e.printStackTrace()
+            throw e
+
+        scatterPlotToggle.selected = getData.scatterToggle
+        columnChartToggle.selected = getData.columnToggle
+        pieToggle.selected = getData.pieToggle
+        cardToggle.selected = getData.cardToggle
+
+        scatterPlotBox.translateX() = getData.scatterPlotBox.x
+        scatterPlotBox.translateY() = getData.scatterPlotBox.y
+        scatterPlotBox.visible = getData.scatterPlotBox.visible
+
+        pieBox.translateX() = getData.pieBox.x
+        pieBox.translateY() = getData.pieBox.y
+        pieBox.visible = getData.pieBox.visible
+
+        columnChartBox.translateX() = getData.columnChartBox.x
+        columnChartBox.translateY() = getData.columnChartBox.y
+        columnChartBox.visible = getData.columnChartBox.visible
+        information.setText(getData.info)
+
+        cardBox.translateX = getData.card.x
+        cardBox.translateY = getData.card.y
+        cardBox.visible = getData.card.visible
+
+        data1 = getData.data.data1
+        println(data3.mkString)
+        data3 = getData.data.data3
+        data3x = getData.data.data3x
+        cardData = getData.data.cardData
+        data5 = getData.data.data5
+        data6 = getData.data.data6
+        cardData = getData.data.cardData
+        cardTemp = getData.cardtemp
+
+        columnChart = new ColumnChart(data3, data3x, "x")
+
+        if dashboard.children.last != columnSlider then
+          columnChartBox.children.remove(columnChartBox.children(1))
+          columnChartBox.children.add(columnChart.component)
+          x=1
+        else
+          columnChartBox.children.remove(columnChartBox.children.last)
+          columnChartBox.children.add(columnChart.component)
+
+        scatterPlot = new ScatterPlot(data1)
+        scatterPlot.series.name = "Temp °C"
+
+        if dashboard.children.last != scatterSlide then
+          scatterPlotBox.children.remove(scatterPlotBox.children.last)
+          scatterPlotBox.children.add(scatterPlot.component)
+          y=1
+        else
+          scatterPlotBox.children.remove(scatterPlotBox.children(1))
+          scatterPlotBox.children.add(scatterPlot.component)
+
+        pie = new Pie(data5,data6)
+        if dashboard.children.last != pieSlider then
+          pieBox.children.remove(pieBox.children.last)
+          pieBox.children.add(pie.component)
+          z=1
+        else
+          pieBox.children.remove(pieBox.children(1))
+          pieBox.children.add(pie.component)
+
+        newCard = new Card(cardData,cardTemp)
+        cardBox.children.remove(cardBox.children.head)
+        cardBox.children.add(newCard.component)
+
+      }
+    }
+
+
     val sideBar = new VBox{
       minWidth = 100
       spacing = 8
       children = Seq(new Button{
         text = "Weather Dashboard"
         onAction = () => dashboard.toFront()
-      },searchLocation,chartMenu, information)
+      },searchLocation,chartMenu,saveAsButton, loadButton, information)
     }
 
     stage = new JFXApp3.PrimaryStage {

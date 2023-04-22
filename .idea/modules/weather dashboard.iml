@@ -17,6 +17,7 @@
     <orderEntry type="library" name="sbt: io.circe:circe-jawn_3:0.14.1:jar" level="project" />
     <orderEntry type="library" name="sbt: io.circe:circe-numbers_3:0.14.1:jar" level="project" />
     <orderEntry type="library" name="sbt: io.circe:circe-parser_3:0.14.1:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.json4s:json4s-ast_3:4.0.6:jar" level="project" />
     <orderEntry type="library" name="sbt: org.openjfx:javafx-base:19:jar" level="project" />
     <orderEntry type="library" name="sbt: org.openjfx:javafx-base:19:win:jar" level="project" />
     <orderEntry type="library" name="sbt: org.openjfx:javafx-controls:19:jar" level="project" />
