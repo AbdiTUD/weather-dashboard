@@ -33,6 +33,7 @@ class ScatterPlot(val dataSet: Seq[(Double,Double)]) extends Components{
     }
     }
   }
+
   def removeScatter(): Unit =
     component.children.remove(component)
     

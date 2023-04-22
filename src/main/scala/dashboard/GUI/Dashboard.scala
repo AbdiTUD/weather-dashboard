@@ -2,22 +2,22 @@ package dashboard.GUI
 
 import backend.API.{AirPollution, DateFormat, Forecast, WeatherData}
 import backend.API.DateFormat.*
+import javafx.beans.value.{ChangeListener, ObservableValue}
 import javafx.scene.control.Alert
 import javafx.scene.layout.{AnchorPane, Priority}
 import scalafx.scene.layout.{BorderPane, GridPane, HBox, VBox}
 import scalafx.scene.Scene
 import scalafx.application.JFXApp3
 import scalafx.Includes.*
-import scalafx.scene.control.{Button, CheckMenuItem, ContextMenu, Label, MenuButton, MenuItem, TextField, ToggleButton, Tooltip}
+import scalafx.scene.control.{Button, CheckMenuItem, ContextMenu, Label, MenuButton, MenuItem, Slider, TextField, ToggleButton, Tooltip}
 import scalafx.scene.paint.Color
 import scalafx.scene.text.Font
 import scalafx.collections.ObservableBuffer
 import scalafx.event.ActionEvent
-import scalafx.geometry.Insets
+import scalafx.geometry.{Insets, Orientation, Pos}
 import scalafx.scene.Node
 
 import scala.collection.mutable.Buffer
-import scalafx.geometry.Pos
 import scalafx.scene.Group
 import scalafx.scene.input.{ContextMenuEvent, MouseButton, MouseEvent}
 
@@ -76,6 +76,7 @@ object DashboardUI extends JFXApp3 {
       managed = true
       vgrow = Priority.SOMETIMES
       spacing = 5
+      resize
       children = Seq(
         new Label {
           text = "Scatter Plot"
@@ -85,11 +86,23 @@ object DashboardUI extends JFXApp3 {
         scatterPlot.component
       )
     }
+    val scatterSlide = new Slider(0.5, 2.0, 1.0)
+    scatterSlide.setOrientation(Orientation.HORIZONTAL)
+    scatterSlide.setShowTickLabels(true)
+    scatterSlide.setShowTickMarks(true)
+
+    scatterSlide.valueProperty().addListener(new ChangeListener[Number] {
+      override def changed(observable: ObservableValue[_ <: Number], oldValue: Number, newValue: Number): Unit = {
+        scatterPlotBox.setScaleX(newValue.doubleValue())
+        scatterPlotBox.setScaleY(newValue.doubleValue())
+      }
+    })
+    scatterPlotBox.getChildren.add(scatterSlide)
 
     var scatterCount = 1
     val duplicatedScatter = new VBox()
 
-    val scatterMenu = new ContextMenu(new MenuItem("Duplicate"))
+    lazy val scatterMenu = new ContextMenu(new MenuItem("Duplicate"))
     scatterPlotBox.onContextMenuRequested = (deez: ContextMenuEvent) => {
       scatterMenu.show(scatterPlotBox, deez.screenX, deez.screenY)
     }
@@ -109,6 +122,20 @@ object DashboardUI extends JFXApp3 {
             scatterPlot.duplicate(scatterPlot).component
           )
         }
+
+        val slider = new Slider(0.5, 2.0, 1.0)
+        slider.setOrientation(Orientation.HORIZONTAL)
+        slider.setShowTickLabels(true)
+        slider.setShowTickMarks(true)
+
+        slider.valueProperty().addListener(new ChangeListener[Number] {
+          override def changed(observable: ObservableValue[_ <: Number], oldValue: Number, newValue: Number): Unit = {
+            duplicated.setScaleX(newValue.doubleValue())
+            duplicated.setScaleY(newValue.doubleValue())
+          }
+        })
+        duplicated.getChildren.add(slider)
+
         duplicatedScatter.children.add(duplicated)
         scatterCount += 1
         val duplicateManu = new ContextMenu(new MenuItem("Remove"))
@@ -116,11 +143,10 @@ object DashboardUI extends JFXApp3 {
           duplicateManu.show(duplicated, deez.screenX, deez.screenY)
         }
         duplicateManu.items.head.onAction = (_) => {
-          scatterPlot.duplicate(scatterPlot).removeScatter()
-          duplicated.children.remove(duplicated.children.head)
-          duplicated.children.remove(duplicated.children.last)
-          scatterCount-=1
-        }
+            duplicatedScatter.children.remove(duplicatedScatter.children.head)
+            scatterCount-=1
+          }
+
       else
         val alert = new Alert(Alert.AlertType.INFORMATION){
           setTitle("Duplicate Component")
@@ -133,11 +159,7 @@ object DashboardUI extends JFXApp3 {
     scatterPlotBox.onContextMenuRequested = (deez: ContextMenuEvent) => {
       scatterMenu.show(scatterPlotBox, deez.screenX, deez.screenY)
     }
-    scatterMenu.items.last.onAction = (_) => {
-      scatterPlot.removeScatter()
-      scatterPlotBox.children.remove(scatterPlotBox.children.last)
-      scatterPlotBox.children.remove(scatterPlotBox.children.head)
-    }
+
 
     var pieBox = new VBox {
       id = "pieBox"
@@ -153,6 +175,20 @@ object DashboardUI extends JFXApp3 {
         pie.component
       )
     }
+
+    val pieSlider = new Slider(0.5, 2.0, 1.0)
+    pieSlider.setOrientation(Orientation.HORIZONTAL)
+    pieSlider.setShowTickLabels(true)
+    pieSlider.setShowTickMarks(true)
+
+    pieSlider.valueProperty().addListener(new ChangeListener[Number] {
+      override def changed(observable: ObservableValue[_ <: Number], oldValue: Number, newValue: Number): Unit = {
+        pieBox.setScaleX(newValue.doubleValue())
+        pieBox.setScaleY(newValue.doubleValue())
+      }
+    })
+    pieBox.getChildren.add(pieSlider)
+
     var pieCount = 1
     val duplicatedPie = new VBox()
 
@@ -176,6 +212,20 @@ object DashboardUI extends JFXApp3 {
             pie.duplicatePie(pie).component
           )
         }
+
+        val slider = new Slider(0.5, 2.0, 1.0)
+        slider.setOrientation(Orientation.HORIZONTAL)
+        slider.setShowTickLabels(true)
+        slider.setShowTickMarks(true)
+
+        slider.valueProperty().addListener(new ChangeListener[Number] {
+          override def changed(observable: ObservableValue[_ <: Number], oldValue: Number, newValue: Number): Unit = {
+            duplicated.setScaleX(newValue.doubleValue())
+            duplicated.setScaleY(newValue.doubleValue())
+          }
+        })
+
+        duplicated.getChildren.add(slider)
         duplicatedPie.children.add(duplicated)
         pieCount += 1
         val duplicateManu = new ContextMenu(new MenuItem("Remove"))
@@ -183,8 +233,7 @@ object DashboardUI extends JFXApp3 {
           duplicateManu.show(duplicated, deez.screenX, deez.screenY)
         }
         duplicateManu.items.head.onAction = (_) => {
-          duplicated.children.remove(duplicated.children.last)
-          duplicated.children.remove(duplicated.children.head)
+          duplicatedPie.children.remove(duplicatedPie.children.head)
           pieCount-=1
         }
 
@@ -199,11 +248,9 @@ object DashboardUI extends JFXApp3 {
     pieBox.onContextMenuRequested = (deez: ContextMenuEvent) => {
       pieMenu.show(pieBox, deez.screenX, deez.screenY)
     }
-    pieMenu.items.last.onAction = (_) => {
-      pie.removePie()
-      pieBox.children.remove(pieBox.children.head)
-    }
-    var columnChartBox = new VBox {
+
+
+    val columnChartBox = new VBox {
       id = "columnChartBox"
       spacing = 3
       managed = true
@@ -217,6 +264,21 @@ object DashboardUI extends JFXApp3 {
         columnChart.component
       )
     }
+
+    val columnSlider = new Slider(0.5, 2.0, 1.0)
+    columnSlider.setOrientation(Orientation.HORIZONTAL)
+    columnSlider.setShowTickLabels(true)
+    columnSlider.setShowTickMarks(true)
+
+    columnSlider.valueProperty().addListener(new ChangeListener[Number] {
+      override def changed(observable: ObservableValue[_ <: Number], oldValue: Number, newValue: Number): Unit = {
+        columnChartBox.setScaleX(newValue.doubleValue())
+        columnChartBox.setScaleY(newValue.doubleValue())
+      }
+    })
+
+    columnChartBox.getChildren.add(columnSlider)
+
 
     var columnChartCount = 1
     var duplicatedColumnChart = new VBox()
@@ -241,6 +303,20 @@ object DashboardUI extends JFXApp3 {
             columnChart.duplicateChart(columnChart).component
           )
         }
+        val slider = new Slider(0.5, 2.0, 1.0)
+        slider.setOrientation(Orientation.HORIZONTAL)
+        slider.setShowTickLabels(true)
+        slider.setShowTickMarks(true)
+
+        slider.valueProperty().addListener(new ChangeListener[Number] {
+          override def changed(observable: ObservableValue[_ <: Number], oldValue: Number, newValue: Number): Unit = {
+            duplicated.setScaleX(newValue.doubleValue())
+            duplicated.setScaleY(newValue.doubleValue())
+          }
+        })
+
+        duplicated.getChildren.add(slider)
+
         duplicatedColumnChart.children += duplicated
         columnChartCount += 1
         val duplicateManu = new ContextMenu(new MenuItem("Remove"))
@@ -248,8 +324,7 @@ object DashboardUI extends JFXApp3 {
           duplicateManu.show(duplicated, deez.screenX, deez.screenY)
         }
         duplicateManu.items.head.onAction = (_) => {
-          duplicated.children.remove(duplicated.children.last)
-          duplicated.children.remove(duplicated.children.head)
+          duplicatedColumnChart.children.remove(duplicatedColumnChart.children.head)
           columnChartCount-=1
         }
       else
@@ -264,11 +339,7 @@ object DashboardUI extends JFXApp3 {
     columnChartBox.onContextMenuRequested = (deez: ContextMenuEvent) => {
       columnChartMenu.show(columnChartBox, deez.screenX, deez.screenY)
     }
-    columnChartMenu.items.last.onAction = (_) => {
-      columnChart.removeColumn()
-      columnChartBox.children.remove(columnChartBox.children.last)
-      columnChartBox.children.remove(columnChartBox.children.head)
-    }
+
 
     var cardBox = new VBox{
       id = "cardBox"
@@ -347,9 +418,21 @@ object DashboardUI extends JFXApp3 {
       add(duplicatedPie, 5, 2)
       add(duplicatedScatter, 7, 2)
     }
+    scatterMenu.items.last.onAction = (_) => {
+      dashboard.children.remove(scatterPlotBox)
+    }
+    pieMenu.items.last.onAction = (_) => {
+      dashboard.children.remove(pieBox)
+    }
+    columnChartMenu.items.last.onAction = (_) => {
+      dashboard.children.remove(columnChartBox)
+    }
+
 
     var information = new Label("Type in a city name to get weather info...")
-
+    var x = 0
+    var y = 0
+    var z = 0
     val searchLocation = new TextField{
       promptText = "Search City"
       onAction = () => {
@@ -362,23 +445,41 @@ object DashboardUI extends JFXApp3 {
         data3 = currentWeather.datarain
         data3x = currentWeather.obsrain
         columnChart = new ColumnChart(data3, data3x, "x")
-        columnChartBox.children.remove(columnChartBox.children.last)
-        columnChartBox.children.add(columnChart.component)
+        if x == 0 then
+          columnChartBox.children.remove(columnChartBox.children(1))
+          columnChartBox.children.add(columnChart.component)
+          x-=1
+        else
+          columnChartBox.children.remove(columnChartBox.children.last)
+          columnChartBox.children.add(columnChart.component)
+
 
         data1 = currentWeather.dataTemps
         scatterPlot = new ScatterPlot(data1)
         scatterPlot.series.name = "Temp °C"
-        scatterPlotBox.children.remove(scatterPlotBox.children.last)
-        scatterPlotBox.children.add(scatterPlot.component)
+
+        if y == 0 then
+          scatterPlotBox.children.remove(scatterPlotBox.children(1))
+          scatterPlotBox.children.add(scatterPlot.component)
+          y-=1
+        else
+          scatterPlotBox.children.remove(scatterPlotBox.children.last)
+          scatterPlotBox.children.add(scatterPlot.component)
 
         cardData = currentWeather.datarain
         newCard = new Card(cardData, currentWeather.temp)
-        cardBox.children.remove(cardBox.children.last)
+        cardBox.children.remove(cardBox.children.head)
         cardBox.children.add(newCard.component)
 
         pie = new Pie(currentWeather.airPollutiondata,currentWeather.AirPollutionNames)
-        pieBox.children.remove(pieBox.children.last)
-        pieBox.children.add(pie.component)
+        if z == 0 then
+          pieBox.children.remove(pieBox.children(1))
+          pieBox.children.add(pie.component)
+          z-=1
+        else
+          pieBox.children.remove(pieBox.children.last)
+          pieBox.children.add(pie.component)
+
         information.setText(s"Location: $currentCity \nDate: ${DateFormat.getDay(currentWeather.getWDfrom.dt)}")
       }
     }
