@@ -20,7 +20,7 @@ class Card(input: Seq[Seq[Double]],temp: Double) extends Components {
     sqrt(input.map(x => x.map(d => pow(d - mean, 2)).sum).sum / n).toInt
   }
 
-  override def component: Pane = {
+  override def component: Pane =
     val tempText = new Text(temperature.toString + " °C")
     tempText.style = "-fx-font-size: 24pt"
 
@@ -78,7 +78,7 @@ class Card(input: Seq[Seq[Double]],temp: Double) extends Components {
       stdDevText.layoutX = Xwidth * 0.1
       stdDevText.layoutY = Yheight * 0.95
 
-      tempText.layoutX = Xwidth/2.55
+      tempText.layoutX = Xwidth/2.5
       tempText.layoutY = temperatureBox.getHeight/2.0
 
       prefWidth = Xwidth.toDouble
@@ -87,5 +87,5 @@ class Card(input: Seq[Seq[Double]],temp: Double) extends Components {
       prefWidth = Xwidth.toDouble
       prefHeight = Yheight.toDouble
     }
-  }
+
 }

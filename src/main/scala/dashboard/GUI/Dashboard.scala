@@ -15,7 +15,7 @@ import scalafx.scene.paint.Color
 import scalafx.scene.text.Font
 import scalafx.collections.ObservableBuffer
 import scalafx.event.ActionEvent
-import scalafx.geometry.{Insets, Orientation, Pos}
+import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.Node
 
 import scala.collection.mutable.Buffer
@@ -29,6 +29,8 @@ import io.circe.*
 import io.circe.generic.auto.*
 import io.circe.parser.*
 import io.circe.syntax.*
+import javafx.collections.ObservableList
+import scalafx.beans.Observable.sfxObservable2jfx
 import scalafx.scene.control.Alert.AlertType
 
 
@@ -90,7 +92,7 @@ object DashboardUI extends JFXApp3 {
     var scatterPlotBox = new VBox {
       id = "scatterPlotBox"
       managed = true
-      vgrow = Priority.SOMETIMES
+      vgrow = Priority.ALWAYS
       spacing = 5
       resize
       children = Seq(
@@ -103,7 +105,6 @@ object DashboardUI extends JFXApp3 {
       )
     }
     val scatterSlide = new Slider(0.5, 2.0, 1.0)
-    scatterSlide.setOrientation(Orientation.HORIZONTAL)
     scatterSlide.setShowTickLabels(true)
     scatterSlide.setShowTickMarks(true)
 
@@ -127,7 +128,7 @@ object DashboardUI extends JFXApp3 {
         val duplicated = new VBox {
           id = "scatterPlotBox"
           managed = true
-          vgrow = Priority.SOMETIMES
+          vgrow = Priority.ALWAYS
           spacing = 5
           children = Seq(
             new Label {
@@ -140,7 +141,6 @@ object DashboardUI extends JFXApp3 {
         }
 
         val slider = new Slider(0.5, 2.0, 1.0)
-        slider.setOrientation(Orientation.HORIZONTAL)
         slider.setShowTickLabels(true)
         slider.setShowTickMarks(true)
 
@@ -181,7 +181,7 @@ object DashboardUI extends JFXApp3 {
       id = "pieBox"
       spacing = 3
       managed = true
-      vgrow = Priority.SOMETIMES
+      vgrow = Priority.ALWAYS
       children = Seq(
         new Label {
           text = "Pie Chart"
@@ -193,7 +193,6 @@ object DashboardUI extends JFXApp3 {
     }
 
     val pieSlider = new Slider(0.5, 2.0, 1.0)
-    pieSlider.setOrientation(Orientation.HORIZONTAL)
     pieSlider.setShowTickLabels(true)
     pieSlider.setShowTickMarks(true)
 
@@ -217,7 +216,7 @@ object DashboardUI extends JFXApp3 {
         val duplicated = new VBox {
           id = "pieBox"
           managed = true
-          vgrow = Priority.SOMETIMES
+          vgrow = Priority.ALWAYS
           spacing = 5
           children = Seq(
             new Label {
@@ -230,10 +229,8 @@ object DashboardUI extends JFXApp3 {
         }
 
         val slider = new Slider(0.5, 2.0, 1.0)
-        slider.setOrientation(Orientation.HORIZONTAL)
         slider.setShowTickLabels(true)
         slider.setShowTickMarks(true)
-
         slider.valueProperty().addListener(new ChangeListener[Number] {
           override def changed(observable: ObservableValue[_ <: Number], oldValue: Number, newValue: Number): Unit = {
             duplicated.setScaleX(newValue.doubleValue())
@@ -270,7 +267,7 @@ object DashboardUI extends JFXApp3 {
       id = "columnChartBox"
       spacing = 3
       managed = true
-      vgrow = Priority.SOMETIMES
+      vgrow = Priority.ALWAYS
       children = Seq(
         new Label {
           text = "Column Chart"
@@ -282,7 +279,6 @@ object DashboardUI extends JFXApp3 {
     }
 
     val columnSlider = new Slider(0.5, 2.0, 1.0)
-    columnSlider.setOrientation(Orientation.HORIZONTAL)
     columnSlider.setShowTickLabels(true)
     columnSlider.setShowTickMarks(true)
 
@@ -308,7 +304,7 @@ object DashboardUI extends JFXApp3 {
         val duplicated = new VBox {
           id = "columnChartBox2"
           managed = true
-          vgrow = Priority.SOMETIMES
+          vgrow = Priority.ALWAYS
           spacing = 5
           children = Seq(
             new Label {
@@ -320,10 +316,8 @@ object DashboardUI extends JFXApp3 {
           )
         }
         val slider = new Slider(0.5, 2.0, 1.0)
-        slider.setOrientation(Orientation.HORIZONTAL)
         slider.setShowTickLabels(true)
         slider.setShowTickMarks(true)
-
         slider.valueProperty().addListener(new ChangeListener[Number] {
           override def changed(observable: ObservableValue[_ <: Number], oldValue: Number, newValue: Number): Unit = {
             duplicated.setScaleX(newValue.doubleValue())
@@ -332,7 +326,6 @@ object DashboardUI extends JFXApp3 {
         })
 
         duplicated.getChildren.add(slider)
-
         duplicatedColumnChart.children += duplicated
         columnChartCount += 1
         val duplicateManu = new ContextMenu(new MenuItem("Remove"))
@@ -361,8 +354,12 @@ object DashboardUI extends JFXApp3 {
       id = "cardBox"
       spacing = 3
       managed = true
-      vgrow = Priority.SOMETIMES
+      vgrow = Priority.ALWAYS
       children = newCard.component
+    }
+    val cardMenu = new ContextMenu(new MenuItem("Remove"))
+    cardBox.onContextMenuRequested = (deez: ContextMenuEvent) => {
+      cardMenu.show(cardBox, deez.screenX, deez.screenY)
     }
 
     //draggable groups from youtube
@@ -420,6 +417,7 @@ object DashboardUI extends JFXApp3 {
 
     val buttonBox = new MenuButton("Hide/Show Charts"){
       alignment = Pos.TopLeft
+      vgrow = Priority.NEVER
       items = Seq(columnChartToggle, pieToggle, scatterPlotToggle,cardToggle)
     }
 
@@ -443,6 +441,9 @@ object DashboardUI extends JFXApp3 {
     columnChartMenu.items.last.onAction = (_) => {
       dashboard.children.remove(columnChartBox)
     }
+    columnChartMenu.items.head.onAction = (_) => {
+      dashboard.children.remove(columnChartBox)
+    }
 
 
     var information = new Label("Type in a city name to get weather info...")
@@ -460,8 +461,10 @@ object DashboardUI extends JFXApp3 {
         //data3x = currentWeather.obsrain
         data3 = currentWeather.datarain
         data3x = currentWeather.obsrain
+
         columnChart = new ColumnChart(data3, data3x, "x")
-        if x == 0 then
+
+        if x == 0 && columnChartBox.children.last != columnSlider then
           columnChartBox.children.remove(columnChartBox.children(1))
           columnChartBox.children.add(columnChart.component)
           x=1
@@ -474,7 +477,7 @@ object DashboardUI extends JFXApp3 {
         scatterPlot = new ScatterPlot(data1)
         scatterPlot.series.name = "Temp °C"
 
-        if y == 0 then
+        if y == 0 && scatterPlotBox.children.last != scatterSlide then
           scatterPlotBox.children.remove(scatterPlotBox.children(1))
           scatterPlotBox.children.add(scatterPlot.component)
           y=1
@@ -489,8 +492,9 @@ object DashboardUI extends JFXApp3 {
         cardBox.children.add(newCard.component)
         data5 = currentWeather.airPollutiondata
         data6 = currentWeather.AirPollutionNames
+
         pie = new Pie(data5,data6)
-        if z == 0 then
+        if z == 0 && pieBox.children.last != pieSlider then
           pieBox.children.remove(pieBox.children(1))
           pieBox.children.add(pie.component)
           z=1
@@ -509,30 +513,30 @@ object DashboardUI extends JFXApp3 {
         new MenuItem{
           text = "Add Column Chart"
           onAction = () =>
-            if !dashboard.children.contains(columnChartBox) then
+            if !dashboard.getChildrenUnmodifiable.contains(columnChartBox) then
               dashboard.add(columnChartBox,0,1)
-            else new Alert(AlertType.Information, "Already added Column Chartt, \ncheck hide/show button if you've hid it.")
+            else new Alert(AlertType.Information, "Already added Column Chartt, \ncheck hide/show button if you've hid it.").showAndWait()
         },
         new MenuItem{
           text = "Add Pie Chart"
-          if !dashboard.children.contains(pieBox) then
-            onAction = () => dashboard.add(pieBox,5,1)
-          else new Alert(AlertType.Information, "Already added Pie Chart, \ncheck hide/show button if you've hid it.")
+          onAction = () =>
+            if !dashboard.getChildrenUnmodifiable.contains(pieBox) then dashboard.add(pieBox,5,1)
+            else new Alert(AlertType.Information, "Already added Pie Chart, \ncheck hide/show button if you've hid it.").showAndWait()
 
         },
         new MenuItem{
           text = "Add Scatter Chart"
           onAction = () =>
-            if !dashboard.children.contains(scatterPlotBox) then
+            if !dashboard.getChildrenUnmodifiable.contains(scatterPlotBox) then
               dashboard.add(scatterPlotBox,7,1)
-            else new Alert(AlertType.Information, "Already added Scatter Chart, \ncheck hide/show button if you've hid it.")
+            else new Alert(AlertType.Information, "Already added Scatter Chart, \ncheck hide/show button if you've hid it.").showAndWait()
         },
         new MenuItem{
           text = "Add Card"
           onAction = () =>
-            if !dashboard.children.contains(cardBox) then
+            if !dashboard.getChildrenUnmodifiable.contains(cardBox) then
               dashboard.add(cardBox,11,1)
-            else new Alert(AlertType.Information, "Already added this chart, \ncheck hide/show button if you've hid it.")
+            else new Alert(AlertType.Information, "Already added this chart, \ncheck hide/show button if you've hid it.").showAndWait()
 
         }
       )
@@ -545,23 +549,24 @@ object DashboardUI extends JFXApp3 {
     case class CardBox(x: Double, y: Double, visible: Boolean)
     case class Data(data1: Seq[(Double, Double)], data3: Seq[Seq[Double]], data3x: ObservableBuffer[String], cardData: Seq[Seq[Double]], data5: Seq[Int],data6: Seq[String])
     case class Dashboard(scatterPlotBox: ScatterPlotBox, pieBox: PieBox, columnChartBox: ColumnChartBox, data: Data, city:String, info: String,x:Int,y:Int,z:Int,cardtemp: Double,
-                         card: CardBox,scatterToggle: Boolean, columnToggle: Boolean, pieToggle: Boolean, cardToggle: Boolean)
+                         card: CardBox,scatterToggle: Boolean, columnToggle: Boolean, pieToggle: Boolean, cardToggle: Boolean, children: String)
 
     //case class example from 15.4 in OS2, and the way I parsed through the data in the backend.API
 
     val saveAsButton = new Button("Save") {
       onAction = (_) => {
         val dashboardData = Data(data1, data3, data3x, cardData, data5, data6)
-        val dashboard = Dashboard(ScatterPlotBox(scatterPlotBox.translateX(), scatterPlotBox.translateY(), scatterPlotBox.visible.value),
+        val state = Dashboard(ScatterPlotBox(scatterPlotBox.translateX(), scatterPlotBox.translateY(), scatterPlotBox.visible.value),
           PieBox(pieBox.translateX(), pieBox.translateY(), pieBox.visible.value),
           ColumnChartBox(columnChartBox.translateX(), columnChartBox.translateY(), columnChartBox.visible.value),
           dashboardData,currentCity, information.getText,x,y,z,cardTemp, CardBox(cardBox.translateX(), cardBox.translateY(), cardBox.visible.value),
-          scatterPlotToggle.selected.value, columnChartToggle.selected.value, pieToggle.selected.value, cardToggle.selected.value)
+          scatterPlotToggle.selected.value, columnChartToggle.selected.value, pieToggle.selected.value, cardToggle.selected.value, dashboard.getChildrenUnmodifiable.mkString)
 
-        val writeThis = dashboard.asJson.noSpaces
+        val writeThis = state.asJson.noSpaces
         val writer = new PrintWriter(new File("dashboard.json"))
         writer.write(writeThis)
         writer.close()
+        new Alert(AlertType.Information, "File saved successfully!").showAndWait()
       }
     }
 
@@ -574,6 +579,11 @@ object DashboardUI extends JFXApp3 {
           case Left(e) =>
             println("Cannot load this file :D")
             e.printStackTrace()
+            new Alert(AlertType.Error){
+              setTitle("Error Dialog")
+              setHeaderText("Corrupt file!")
+              setContentText("Ooops, the file you're trying to load from is corrupt or modified.\nTry to create a new save and load from that!")
+            }.showAndWait()
             throw e
 
         scatterPlotToggle.selected = getData.scatterToggle
@@ -610,37 +620,46 @@ object DashboardUI extends JFXApp3 {
 
         columnChart = new ColumnChart(data3, data3x, "x")
 
-        if dashboard.children.last != columnSlider then
+        if dashboard.getChildrenUnmodifiable.last != columnSlider && (getData.x == 0 || x==0) then
           columnChartBox.children.remove(columnChartBox.children(1))
           columnChartBox.children.add(columnChart.component)
           x=1
         else
           columnChartBox.children.remove(columnChartBox.children.last)
           columnChartBox.children.add(columnChart.component)
+          x=1
 
         scatterPlot = new ScatterPlot(data1)
         scatterPlot.series.name = "Temp °C"
 
-        if dashboard.children.last != scatterSlide then
-          scatterPlotBox.children.remove(scatterPlotBox.children.last)
+        if dashboard.getChildrenUnmodifiable.last != scatterSlide  && (getData.y == 0 || y==0) then
+          scatterPlotBox.children.remove(scatterPlotBox.children(1))
           scatterPlotBox.children.add(scatterPlot.component)
           y=1
         else
-          scatterPlotBox.children.remove(scatterPlotBox.children(1))
+          scatterPlotBox.children.remove(scatterPlotBox.children.last)
           scatterPlotBox.children.add(scatterPlot.component)
+          y=1
 
         pie = new Pie(data5,data6)
-        if dashboard.children.last != pieSlider then
-          pieBox.children.remove(pieBox.children.last)
+        if dashboard.getChildrenUnmodifiable.last != pieSlider && (getData.z == 0 || z ==0) then
+          pieBox.children.remove(pieBox.children(1))
           pieBox.children.add(pie.component)
           z=1
         else
-          pieBox.children.remove(pieBox.children(1))
+          pieBox.children.remove(pieBox.children.last)
           pieBox.children.add(pie.component)
+          z=1
 
         newCard = new Card(cardData,cardTemp)
         cardBox.children.remove(cardBox.children.head)
         cardBox.children.add(newCard.component)
+        println(getData.children)
+
+        if getData.children.contains("id=cardBox") && !dashboard.getChildrenUnmodifiable.contains(newCard) then dashboard.add(cardBox, cardBox.translateX.value.toInt, cardBox.translateY.value.toInt)
+        else if getData.children.contains("id=pieBox") && !dashboard.getChildrenUnmodifiable.contains(pieBox) then dashboard.add(pieBox, pieBox.translateX.value.toInt, pieBox.translateY.value.toInt)
+        else if getData.children.contains("idscatterPlotBox") && !dashboard.getChildrenUnmodifiable.contains(scatterPlotBox) then dashboard.add(scatterPlotBox, scatterPlotBox.translateX.value.toInt, scatterPlotBox.translateY.value.toInt)
+        else if getData.children.contains("id=columnChartBox") && !dashboard.getChildrenUnmodifiable.contains(columnChartBox) then dashboard.add(columnChartBox, columnChartBox.translateX.value.toInt, columnChartBox.translateY.value.toInt)
 
       }
     }
