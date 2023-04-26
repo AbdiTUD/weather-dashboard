@@ -11,7 +11,7 @@ import scalafx.scene.control.Tooltip
 class ColumnChart(var dataSet: Seq[Seq[Double]], var dataSetx: ObservableBuffer[String], val yTitle: String) extends Components {
 
   var xAxis: CategoryAxis = CategoryAxis(dataSetx)
-  var yAxis: NumberAxis = NumberAxis(yTitle, 0.0, (dataSet.map(s=>s.max).max/2)+5, dataSet.map(s=>s.max).max+5)
+  var yAxis: NumberAxis = NumberAxis(yTitle, Math.min(0,(dataSet.map(s=>s.min).min/2)+5), (dataSet.map(s=>s.max).max/2)+5, dataSet.map(s=>s.max).max+7)
 
   def parser(datay: Seq[Double]) = ObservableBuffer.from(dataSetx zip datay).map(xy => XYChart.Data[String, Number](xy._1, xy._2))
 

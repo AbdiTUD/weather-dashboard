@@ -3,6 +3,7 @@ import API.*
 import backend.API.DateFormat.*
 
 object WeatherData {
+  //we model out the layout of the json file
   case class wind(speed: Double, deg: Int)
   case class snow(`1h`: Double = 0.0)
   case class rain(`1h`: Double = 0.0)
@@ -48,6 +49,7 @@ object WeatherData {
       case Some(r) => r
       case None => rain()
 
+  //we use the parsing methods created in the API class
   def getWeatherData(coord: coord): DataResponse =
     val APIcall = s"https://api.openweathermap.org/data/2.5/weather?lat=${coord.lat}&lon=${coord.lon}&appid=${apiKey}&units=metric"
     val fetchData = API.fetchData(APIcall)

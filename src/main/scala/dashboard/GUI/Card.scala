@@ -9,6 +9,7 @@ import scala.math.*
 
 class Card(input: Seq[Seq[Double]],temp: Double) extends Components {
 
+  // we calculate the needed things from the Seq[Seq[Double]]
   val temperature: Double = temp
   val min: Int = input.map(_.min).min.toInt
   val max: Int = input.map(_.max).max.toInt
@@ -20,6 +21,7 @@ class Card(input: Seq[Seq[Double]],temp: Double) extends Components {
     sqrt(input.map(x => x.map(d => pow(d - mean, 2)).sum).sum / n).toInt
   }
 
+  // we create the component
   override def component: Pane =
     val tempText = new Text(temperature.toString + " °C")
     tempText.style = "-fx-font-size: 24pt"
@@ -45,7 +47,7 @@ class Card(input: Seq[Seq[Double]],temp: Double) extends Components {
     val temperatureBox = new Rectangle {
       width = Xwidth.toDouble
       height = Yheight / 2.0
-      fill = if (temperature > 0) Color.Red else Color.Blue
+      fill = if temperature > 0 then Color.Red else Color.Blue
     }
 
     val infoBox = new Rectangle {
@@ -66,7 +68,7 @@ class Card(input: Seq[Seq[Double]],temp: Double) extends Components {
         sumText,
         stdDevText
       )
-
+      // We set the text alligment to their desired positions in the bottom rectangle
       minText.layoutX = Xwidth * 0.1
       minText.layoutY = Yheight * 0.55
       maxText.layoutX = Xwidth * 0.1

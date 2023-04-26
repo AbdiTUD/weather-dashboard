@@ -6,6 +6,7 @@ import API.*
 
 object Forecast :
 
+  //we model out the JSON file that we get from the API
   case class Wind(speed: Double, deg: Int, gust: Double = 0.0)
   case class snow(`3h`: Double = 0.0)
   case class rain(`3h`: Double = 0.0)
@@ -59,6 +60,7 @@ object Forecast :
       case Some(s) => s
       case None => snow()
 
+  //we use the methods created in the API class to parse through the data
   def getForeData(place: String) =
     val APIcall = s"https://api.openweathermap.org/data/2.5/forecast?q=$place&appid=${apiKey}&units=metric"
     val fetchData = API.fetchData(APIcall)
